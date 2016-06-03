@@ -17,10 +17,28 @@ gaugeApp
                     type: 'bar'
                 },
                 tooltip: {
+                    enabled: true,
+                    useHTML: true,
                     style: {
-                        padding: 10,
-                        fontWeight: 'bold'
+                        padding: 10
+                    },
+                    formatter: function() {
+                        return '<div style="height: 130px; width: 300px;" >'
+                            + '<div class="text-capitalize"><img src="'+ this.series.name.picture.thumbnail +'"> ' + this.series.name.name.title + ' ' + this.series.name.name.first + ' ' + this.series.name.name.last + ' (' + this.y + ')</div>'
+                            + '<div>Email: ' + this.series.name.email + '</div>'
+                            + '<div class="text-capitalize"> Endereço: ' + this.series.name.location.street + ' <br/>Cidade: ' + this.series.name.location.city + ' (' + this.series.name.location.state + ')</div>'
+                            + '<div > Telefone: ' + this.series.name.phone + ' <br/>Celular: ' + this.series.name.cell + '</div>'
+                            + '</div>';
                     }
+
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'top',
+                    y: 30,
+                    labelFormatter: function () {return '<span class="text-capitalize">' + this.name.name.title+ ' ' + this.name.name.first +'</span>';},
+                    useHTML:true
                 }
             },
             //The below properties are watched separately for changes.
@@ -37,10 +55,16 @@ gaugeApp
             //Configuration for the xAxis (optional). Currently only one x axis can be dynamically controlled.
             //properties currentMin and currentMax provided 2-way binding to the chart's maximum and minimum
             xAxis: {
+                min: 0,
                 title: {text: 'values'}
             },
+            plotOptions: {
+                series: {
+                    stacking: 'normal'
+                }
+            },
             //Whether to use Highstocks instead of Highcharts (optional). Defaults to false.
-            useHighStocks: false
+            useHighStocks: false,
         };
 
         //Configuracao grafico por tipo
@@ -53,10 +77,17 @@ gaugeApp
                     type: 'column'
                 },
                 tooltip: {
+                    enabled: true,
+                    useHTML: true,
                     style: {
-                        padding: 10,
-                        fontWeight: 'bold'
+                        padding: 10
+                    },
+                    formatter: function() {
+                        return '<div>'
+                            + ' <div class="text-capitalize">' + this.series.name.toLowerCase() + ' (' + this.y + ')</div>'
+                            + '</div>';
                     }
+
                 }
             },
             //The below properties are watched separately for changes.
@@ -77,6 +108,7 @@ gaugeApp
             },
             //Whether to use Highstocks instead of Highcharts (optional). Defaults to false.
             useHighStocks: false
+
         };
 
         //Cria lista de usuarios
@@ -141,7 +173,7 @@ gaugeApp
 
                     series = {};
                     series.data = [brandPeerUser.total];
-                    series.name = brandPeerUser.user.name.first;
+                    series.name = brandPeerUser.user;
                     series.description = brandPeerUser.interaction.text;
 
                     $scope.chartInteractionPeerUser.series.push(series);
